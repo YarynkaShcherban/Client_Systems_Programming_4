@@ -1,0 +1,9 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<div class="alert alert-warning mt-4">
+    <h2 class="mb-3">Помилка 404 — Сторінку не знайдено</h2>
+    <p>Такої сторінки не існує або вона була переміщена.</p>
+</div>
+<a href="{% url 'catalog:book_list' %}" class="btn btn-primary">Повернутися до каталогу</a>
+{% endblock %}

@@ -1,0 +1,18 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "rules": {
+        "indent": ["error", 4],
+        "linebreak-style": "off",
+        "no-console": "off",
+        "import/extensions": "off",
+        "no-alert": "off",
+        "import/prefer-default-export": "off",
+        "eol-last": ["error", "always"]
+    }
+}

@@ -1,0 +1,9 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<div class="alert alert-danger mt-4">
+    <h2 class="mb-3">Помилка 403 — Доступ заборонено</h2>
+    <p>У вас немає прав доступу до цієї сторінки.</p>
+</div>
+<a href="{% url 'catalog:book_list' %}" class="btn btn-primary">На головну</a>
+{% endblock %}

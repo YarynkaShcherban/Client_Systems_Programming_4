@@ -1,0 +1,9 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<div class="alert alert-danger mt-4">
+    <h2 class="mb-3">Помилка 500 — Внутрішня помилка сервера</h2>
+    <p>Щось пішло не так. Ми вже працюємо над усуненням.</p>
+</div>
+<a href="{% url 'catalog:book_list' %}" class="btn btn-secondary">Повернутися на головну</a>
+{% endblock %}

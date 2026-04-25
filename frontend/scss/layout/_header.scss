@@ -1,0 +1,21 @@
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: $color-bg;
+  border-bottom: 1px solid $color-border;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: $color-primary;
+  text-transform: lowercase;
+  letter-spacing: 1px;
+}
+
+.auth-nav {
+  display: flex;
+  gap: 15px;
+}

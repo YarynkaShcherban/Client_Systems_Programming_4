@@ -1,0 +1,39 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<h1 class="mb-3">Деталі книги: {{ book.name }}</h1>
+
+{% if book.image %}
+<div class="mb-3">
+    <img src="http://127.0.0.1:8000{{ book.image }}" alt="Book Image" class="img-fluid" style="max-width: 300px;">
+</div>
+{% endif %}
+
+<ul class="list-group mb-3">
+    <li class="list-group-item"><strong>ISBN:</strong> {{ book.isbn }}</li>
+    <li class="list-group-item"><strong>Ціна:</strong> {{ book.price }}</li>
+    <li class="list-group-item">
+        <strong>Видавець:</strong>
+        <a href="{% url 'catalog:book_list_by_publisher' book.publisher%}" class="text-decoration-none">
+            {{ book.publisher_name }}
+        </a>
+    </li>
+    <li class="list-group-item"><strong>Автори:</strong>
+        {% for author in book.author_list%}
+        {{ author.first_name }} {{ author.last_name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </li>
+    <li class="list-group-item"><strong>Жанри:</strong>
+        {% for genre in book.genre_list%}
+        <a href="{% url 'catalog:book_list_by_genre' genre.id %}"
+            class="badge bg-info text-decoration-none text-white">{{ genre.name }}</a>
+        {% if not forloop.last %},
+        {%endif %}
+        {% endfor %}
+    </li>
+</ul>
+
+<a class="btn btn-warning" href="{% url 'catalog:book_update' book.book_id %}">Редагувати</a>
+<a class="btn btn-danger" href="{% url 'catalog:book_delete' book.book_id %}">Видалити</a>
+<a class="btn btn-secondary" href="{% url 'catalog:book_list' %}">Назад до списку</a>
+{% endblock %}

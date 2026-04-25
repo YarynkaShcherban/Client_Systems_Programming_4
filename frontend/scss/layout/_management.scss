@@ -1,0 +1,29 @@
+.management-wrapper {
+  background-color: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 2px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+.management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.management-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: $color-primary;
+  font-weight: 400;
+}
+
+@include mobile {
+  .management-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+}

@@ -1,0 +1,41 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<h1>Статистика книг</h1>
+
+<h2>Загальна</h2>
+<p>Середня ціна всіх книг: {{ stats.overall.avg_price }}</p>
+<p>Кількість книг: {{ stats.overall.total_books }}</p>
+
+<h2>По жанрах</h2>
+<table class="table table-striped">
+    <tr>
+        <th>Жанр</th>
+        <th>Середня ціна</th>
+        <th>Кількість книг</th>
+    </tr>
+    {% for genre in stats.genres %}
+    <tr>
+        <td>{{ genre.name }}</td>
+        <td>{{ genre.avg_price }}</td>
+        <td>{{ genre.num_books }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>По видавцях</h2>
+<table class="table table-striped">
+    <tr>
+        <th>Видавець</th>
+        <th>Середня ціна</th>
+        <th>Кількість книг</th>
+    </tr>
+    {% for pub in stats.publishers %}
+    <tr>
+        <td>{{ pub.name }}</td>
+        <td>{{ pub.avg_price }}</td>
+        <td>{{ pub.num_books }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

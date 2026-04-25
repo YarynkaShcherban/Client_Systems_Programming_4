@@ -1,0 +1,123 @@
+{% extends "catalog/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Порівняльний аналіз продуктивності (200 vs 500 vs 10000 запитів)</h2>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h4 class="text-primary border-bottom pb-2">Етап 1: Пакет 200 запитів</h4>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-sm">{{ graph_200|safe }}</div>
+        </div>
+        <div class="col-lg-4">
+            <div class="alert alert-info">
+                <strong>Оптимально:</strong> {{ opt_200.threads }} потоків<br>
+                <strong>Мін. час:</strong> {{ opt_200.time }} сек
+            </div>
+            <table class="table table-sm table-hover bg-white border">
+                <thead class="table-light"><tr><th>Потоки</th><th>Час (сек)</th></tr></thead>
+                <tbody>
+                    {% for row in table_200 %}
+                    <tr {% if row.threads == opt_200.threads %}class="table-success"{% endif %}>
+                        <td>{{ row.threads }}</td><td>{{ row.total_time|floatformat:4 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h4 class="text-danger border-bottom pb-2">Етап 2: Пакет 500 запитів</h4>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-sm">{{ graph_500|safe }}</div>
+        </div>
+        <div class="col-lg-4">
+            <div class="alert alert-warning">
+                <strong>Оптимально:</strong> {{ opt_500.threads }} потоків<br>
+                <strong>Мін. час:</strong> {{ opt_500.time }} сек
+            </div>
+            <table class="table table-sm table-hover bg-white border">
+                <thead class="table-light"><tr><th>Потоки</th><th>Час (сек)</th></tr></thead>
+                <tbody>
+                    {% for row in table_500 %}
+                    <tr {% if row.threads == opt_500.threads %}class="table-danger"{% endif %}>
+                        <td>{{ row.threads }}</td><td>{{ row.total_time|floatformat:4 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h4 class="text-danger border-bottom pb-2">Етап 3: Пакет 10000 запитів</h4>
+            </div>
+            <div class="col-lg-8">
+                <div class="card shadow-sm">{{ graph_10000|safe }}</div>
+            </div>
+            <div class="col-lg-4">
+                <div class="alert alert-warning">
+                    <strong>Оптимально:</strong> {{ opt_10000.threads }} потоків<br>
+                    <strong>Мін. час:</strong> {{ opt_10000.time }} сек
+                </div>
+                <table class="table table-sm table-hover bg-white border">
+                    <thead class="table-light"><tr><th>Потоки</th><th>Час (сек)</th></tr></thead>
+                    <tbody>
+                        {% for row in table_10000 %}
+                        <tr {% if row.threads == opt_10000.threads %}class="table-danger"{% endif %}>
+                            <td>{{ row.threads }}</td><td>{{ row.total_time|floatformat:4 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-4 pb-5">
+    <h2 class="text-center fw-bold mb-4">Дослідження надлишкової багатопотоковості</h2>
+    <p class="text-muted text-center mb-5">Аналіз впливу великої кількості потоків на продуктивність I/O-bound операцій</p>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h4 class="text-primary border-bottom pb-2">Результати експериментальних запусків</h4>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {{ graph_div|safe }}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="alert alert-info">
+                <strong>Оптимально:</strong> {{ optimal_threads }} потоків<br>
+                <strong>Мін. час:</strong> {{ min_time }} сек
+            </div>
+            
+            <div class="table-responsive" style="max-height: 400px;">
+                <table class="table table-sm table-hover bg-white border">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th>Потоки</th>
+                            <th>Час виконання</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_data %}
+                        <tr {% if row.threads == optimal_threads %}class="table-success fw-bold"{% endif %}>
+                            <td>{{ row.threads }}</td>
+                            <td>{{ row.execution_time|floatformat:4 }} сек</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

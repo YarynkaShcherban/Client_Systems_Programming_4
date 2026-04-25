@@ -1,0 +1,12 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<h1 class="mb-3">Видалення книги: {{ book.name }}</h1>
+<p>Ви впевнені, що хочете видалити цю книгу?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Так, видалити</button>
+    <a href="{% url 'catalog:book_list' %}" class="btn btn-secondary">Скасувати</a>
+</form>
+{% endblock %}

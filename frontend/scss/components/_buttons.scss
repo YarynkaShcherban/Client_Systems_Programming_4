@@ -1,0 +1,27 @@
+.btn-primary {
+  @include button-base($color-primary);
+}
+
+.btn-outline {
+  @include button-base(transparent);
+  color: $color-primary;
+  border: 1px solid $color-primary;
+
+  &:hover {
+    background-color: $color-primary;
+    color: $color-white;
+  }
+}
+
+.btn-success {
+  @include button-base($color-success);
+}
+
+.btn-danger {
+  @include button-base($color-danger);
+}
+
+.btn-block {
+  width: 100%;
+  text-align: center;
+}

@@ -1,0 +1,53 @@
+@use 'catalog';
+html {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: $font-main, $font-fallback;
+  background-color: $color-bg;
+  color: $color-text;
+  line-height: 1.7;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content-area {
+  flex: 1;
+  padding: 40px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.section-divider {
+  margin: 30px 0;
+  border-top: 1px solid $color-border;
+}
+
+html, body {
+  height: 100%; 
+  margin: 0;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;     
+  min-height: 100vh;       
+  width: 100%;
+  background-color: $color-bg;
+  box-sizing: border-box;
+}

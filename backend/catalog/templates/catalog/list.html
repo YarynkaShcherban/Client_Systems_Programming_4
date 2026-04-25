@@ -1,0 +1,113 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">
+    {% if current_genre %}
+    Книги жанру: {{ current_genre.name }}
+    {% else %}
+    Список усіх книг
+    {% endif %}
+</h1>
+
+{% if current_genre %}
+<p class="text-muted">
+    <a href="{% url 'catalog:book_list' %}">Показати всі книги</a>
+</p>
+{% endif %}
+
+<a class="btn btn-primary mb-4" href="{% url 'catalog:book_create' %}">Додати нову книгу</a>
+
+<!-- flex контейнер для карток -->
+<div class="d-flex flex-wrap gap-4">
+
+    {% for book in books %}
+    <div class="card shadow-sm rounded-4 d-inline-block">
+
+        {% if book.image %}
+        <img src="http://127.0.0.1:8000{{ book.image }}" class="card-img-top rounded-top-4"
+            style="width: 254px; height: 390px; object-fit: cover;">
+        {% else %}
+        <div class="bg-light d-flex justify-content-center align-items-center rounded-top-4"
+            style="width: 254px; height: 390px;">
+            <span class="text-muted">Немає фото</span>
+        </div>
+        {% endif %}
+
+        <div class="card-body" style="width: 254px;">
+            <h5 class="card-title fw-bold">{{ book.name }}</h5>
+
+            <p class="mb-1">
+                <strong>Автор:</strong>
+                {% for a in book.author_list %}
+                {{ a.first_name }} {{ a.last_name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+
+            <p class="mb-1"><strong>Ціна:</strong> {{ book.price }}</p>
+            <p class="mb-1"><strong>Видавництво:</strong> {{ book.publisher_name }}</p>
+            <p class="mb-1"><strong>ISBN:</strong> {{ book.isbn }}</p>
+
+            <div class="mt-3 d-flex flex-wrap gap-2">
+                <a class="btn btn-primary btn-sm" href="{% url 'catalog:book_detail' book.book_id %}">Деталі</a>
+                <a class="btn btn-warning btn-sm" href="{% url 'catalog:book_update' book.book_id %}">Редагувати</a>
+                <a class="btn btn-danger btn-sm" href="{% url 'catalog:book_delete' book.book_id %}">Видалити</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info mt-4">Не знайдено книг за цими критеріями.</div>
+    {% endfor %}
+
+</div>
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination">
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            {% if current_genre %}
+                <a class="page-link" href="?genre={{ current_genre.id }}&page={{ page_obj.previous_page_number }}">«</a>
+            {% else %}
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">«</a>
+            {% endif %}
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">«</span>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                {% if current_genre %}
+                    <a class="page-link" href="?genre={{ current_genre.id }}&page={{ num }}">{{ num }}</a>
+                {% else %}
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            {% if current_genre %}
+                <a class="page-link" href="?genre={{ current_genre.id }}&page={{ page_obj.next_page_number }}">»</a>
+            {% else %}
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">»</a>
+            {% endif %}
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">»</span>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+
+{% endblock %}

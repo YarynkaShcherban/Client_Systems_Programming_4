@@ -1,0 +1,145 @@
+{% extends "catalog/base.html" %}
+{% block content %}
+
+<h1>Аналітичний дашборд</h1>
+<div>
+    <h2>Статистика цін на книги за жанрами</h2>
+    {{ fig_main_stats|safe }}
+</div>
+<div>
+    <h2>Кількість книг по жанрах</h2>
+    {{ fig_genres_count|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Кількість книг по жанрах (Bokeh)</h2>
+    {{ bokeh_genres_count_script|safe }}
+    {{ bokeh_genres_count_div|safe }}
+</div>
+
+<div>
+    <h2>Середня ціна книг по жанрах</h2>
+    {{ fig_genres_price|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Середня ціна книг по жанрах (Bokeh)</h2>
+    {{ bokeh_genres_price_script|safe }}
+    {{ bokeh_genres_price_div|safe }}
+</div>
+
+<div>
+    <h2>Середня ціна книг по авторах</h2>
+    {{ fig_authors_price|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Середня ціна книг по авторах (Bokeh)</h2>
+    {{ bokeh_authors_price_script|safe }}
+    {{ bokeh_authors_price_div|safe }}
+</div>
+
+<div>
+    <h2>Топ авторів</h2>
+    {{ fig_top_authors|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Топ авторів (Bokeh)</h2>
+    {{ bokeh_top_authors_script|safe }}
+    {{ bokeh_top_authors_div|safe }}
+</div>
+
+<div>
+    <h2>Середня ціна по видавництвах</h2>
+    {{ fig_publishers_price|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Середня ціна по видавництвах (Bokeh)</h2>
+    {{ bokeh_publishers_price_script|safe }}
+    {{ bokeh_publishers_price_div|safe }}
+</div>
+<div>
+    <h2>Дорогі видавництва</h2>
+    {{ fig_expensive_pub|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Дорогі видавництва (Bokeh)</h2>
+    {{ bokeh_expensive_pub_script|safe }}
+    {{ bokeh_expensive_pub_div|safe }}
+</div>
+
+<div>
+    <h2>Продажі по магазинах</h2>
+    {{ fig_store_sales|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Продажі по магазинах (Bokeh)</h2>
+    {{ bokeh_store_sales_script|safe }}
+    {{ bokeh_store_sales_div|safe }}
+</div>
+
+<div>
+    <h2>Кількість продажів по магазинах</h2>
+    {{ fig_store_count|safe }}
+</div>
+<div class="bokeh-container" style="width: 100%; min-height: 400px; margin-bottom: 50px;">
+    <h2>Кількість продажів по магазинах (Bokeh)</h2>
+    {{ bokeh_store_count_script|safe }}
+    {{ bokeh_store_count_div|safe }}
+</div>
+
+<div>
+    <h2>Середня ціна куплених книг у магазині за жанрами</h2>
+    <div style="margin-bottom: 20px;">
+        <label for="genre-select" style="font-weight: bold; margin-right: 10px;">Оберіть жанр:</label>
+        <select id="genre-select" style="width: 300px; padding: 5px;">
+            <option value="">---Оберіть---</option>
+        </select>
+    </div>
+
+    <div id="interactive-graph-container" style="min-height: 400px;">
+        <p>Завантаження графіку...</p>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const genreSelect = document.getElementById('genre-select');
+        const graphContainer = document.getElementById('interactive-graph-container');
+
+        function updateGraph(genre = '') {
+            fetch(`/api/catalog/avg-price-by-genre-store/?genre=${encodeURIComponent(genre)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (genreSelect.options.length <= 1) {
+                        genreSelect.innerHTML = '';
+                        data.available_genres.forEach(g => {
+                            const option = document.createElement('option');
+                            option.value = g;
+                            option.textContent = g;
+                            if (g === data.current_genre) {
+                                option.selected = true;
+                            }
+                            genreSelect.appendChild(option);
+                        });
+                    }
+
+                    if (data.graph_json && data.graph_json !== '{}') {
+                        const graphData = JSON.parse(data.graph_json);
+                        Plotly.newPlot(graphContainer, graphData.data, graphData.layout, { responsive: true });
+                    } else {
+                        graphContainer.innerHTML = '<p>Немає даних для відображення</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading graph:', error);
+                    graphContainer.innerHTML = '<p>Помилка завантаження графіку</p>';
+                });
+        }
+
+        updateGraph();
+        genreSelect.addEventListener('change', function () {
+            updateGraph(this.value);
+        });
+    });
+</script>
+</div>
+{% endblock %}
